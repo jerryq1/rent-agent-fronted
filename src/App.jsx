@@ -35,8 +35,8 @@ const Github = (props) => (
 );
 
 // 已在 vite.config.js (本地开发) 和 vercel.json (生产环境) 配置了 API 代理，无需在代码中写死 IP 地址
-// const API_BASE = '';
-const API_BASE = 'http://175.178.18.199:8000';
+const API_BASE = '';
+// const API_BASE = 'http://175.178.18.199:8000';
 
 
 
