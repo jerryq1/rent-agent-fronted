@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import catIcon from './assets/catIcon.svg';
 import {
   Terminal,
   Send,
@@ -421,19 +422,28 @@ export default function App() {
         <div className="flex items-center gap-3">
           <button
             onClick={handleCheckTokens}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-850 hover:text-white transition-all cursor-pointer shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
           >
             <Server className="w-4 h-4" />
             <span>查询tokens使用情况</span>
           </button>
           <a
-            href="https://github.com"
+            href="https://github.com/jerryq1/rent-agent-fronted"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-850 hover:text-white transition-all cursor-pointer shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
           >
             <Github className="w-4 h-4" />
             <span>Star on GitHub</span>
+          </a>
+          <a
+            href="https://jerryq1.github.io/press/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
+          >
+            <img src={catIcon} className="w-4 h-4 object-contain" alt="cat icon" />
+            <span>Mr.j blog</span>
           </a>
         </div>
       </header>
