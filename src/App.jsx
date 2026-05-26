@@ -35,8 +35,9 @@ const Github = (props) => (
 );
 
 // 已在 vite.config.js (本地开发) 和 vercel.json (生产环境) 配置了 API 代理，无需在代码中写死 IP 地址
-const API_BASE = '';
-// const API_BASE = 'http://175.178.18.199:8000';
+// const API_BASE = '';
+const API_BASE = 'http://175.178.18.199:8000';
+
 
 
 // Order of agent nodes as described in the API spec
@@ -54,6 +55,8 @@ const NODE_STEPS = [
   "校正SQL",
   "执行SQL"
 ];
+
+const OPTIONAL_NODES = ["校正SQL"];
 
 export default function App() {
   const [properties, setProperties] = useState([]);
@@ -272,12 +275,16 @@ export default function App() {
                   if (msg.id === aiMsgId) {
                     const updatedNodes = { ...msg.nodes };
 
-                    // Set all prior steps to success if this step succeeded
+                    // Set all prior steps to success or skipped if this step succeeded
                     const currentIdx = NODE_STEPS.indexOf(step);
                     if (currentIdx !== -1) {
                       NODE_STEPS.forEach((s, idx) => {
                         if (idx < currentIdx && updatedNodes[s] === 'pending') {
-                          updatedNodes[s] = 'success';
+                          if (OPTIONAL_NODES.includes(s)) {
+                            updatedNodes[s] = 'skipped';
+                          } else {
+                            updatedNodes[s] = 'success';
+                          }
                         }
                       });
                       updatedNodes[step] = status; // success | running | error
@@ -321,11 +328,15 @@ export default function App() {
 
                 setMessages(prev => prev.map(msg => {
                   if (msg.id === aiMsgId) {
-                    // Mark all nodes as success
+                    // Mark all nodes as success (or skipped if optional and not run)
                     const finishedNodes = { ...msg.nodes };
                     NODE_STEPS.forEach(s => {
                       if (finishedNodes[s] === 'pending' || finishedNodes[s] === 'running') {
-                        finishedNodes[s] = 'success';
+                        if (OPTIONAL_NODES.includes(s)) {
+                          finishedNodes[s] = 'skipped';
+                        } else {
+                          finishedNodes[s] = 'success';
+                        }
                       }
                     });
 
@@ -635,15 +646,20 @@ export default function App() {
                                   <div className="w-3.5 h-3.5 rounded-full bg-red-500 shadow-[0_0_8px_#EF4444] flex items-center justify-center">
                                     <div className="w-1.5 h-1.5 rounded-full bg-white" />
                                   </div>
+                                ) : state === 'skipped' ? (
+                                  <div className="w-3.5 h-3.5 rounded-full border border-dashed border-slate-600 flex items-center justify-center bg-slate-950">
+                                    <div className="w-1 h-[1px] bg-slate-500" />
+                                  </div>
                                 ) : (
                                   <div className="w-3 h-3 rounded-full border border-slate-700 bg-slate-900" />
                                 )}
                               </div>
                               <span className={`text-xs font-medium ${state === 'success' ? 'text-emerald-400' :
                                 state === 'running' ? 'text-amber-400' :
-                                  state === 'error' ? 'text-red-400 font-semibold' : 'text-slate-500'
+                                  state === 'error' ? 'text-red-400 font-semibold' :
+                                    state === 'skipped' ? 'text-slate-600 italic' : 'text-slate-500'
                                 }`}>
-                                {node}
+                                {node}{state === 'skipped' && '(验证SQL正确，跳过校正)'}
                               </span>
                             </div>
                           );
