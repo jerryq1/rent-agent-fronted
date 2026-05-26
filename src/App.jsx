@@ -84,13 +84,24 @@ export default function App() {
     { timestamp: new Date().toLocaleTimeString(), type: 'INFO', step: 'System', info: 'Initializing RentAgent Connection...' }
   ]);
 
+  const [isMobileConsoleOpen, setIsMobileConsoleOpen] = useState(false);
+
   const logsEndRef = useRef(null);
+  const mobileLogsEndRef = useRef(null);
   const chatEndRef = useRef(null);
 
   // Auto scroll logs
   useEffect(() => {
     if (logsEndRef.current) {
       const container = logsEndRef.current.parentNode;
+      if (container) {
+        setTimeout(() => {
+          container.scrollTop = container.scrollHeight;
+        }, 0);
+      }
+    }
+    if (mobileLogsEndRef.current) {
+      const container = mobileLogsEndRef.current.parentNode;
       if (container) {
         setTimeout(() => {
           container.scrollTop = container.scrollHeight;
@@ -413,46 +424,46 @@ export default function App() {
           <span className="text-xl font-bold tracking-wide bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
             RentAgent.AI
           </span>
-          <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Connected
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={handleCheckTokens}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
+            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
           >
             <Server className="w-4 h-4" />
-            <span>查询tokens使用情况</span>
+            <span className="hidden sm:inline">查询tokens使用情况</span>
           </button>
           <a
             href="https://github.com/jerryq1/rent-agent-fronted"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
+            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
           >
             <Github className="w-4 h-4" />
-            <span>Star on GitHub</span>
+            <span className="hidden sm:inline">Star on GitHub</span>
           </a>
           <a
             href="https://jerryq1.github.io/press/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
+            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-sm font-medium hover:bg-slate-800 hover:border-slate-700 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer shadow-sm"
           >
             <img src={catIcon} className="w-4 h-4 object-contain" alt="cat icon" />
-            <span>Mr.j blog</span>
+            <span className="hidden sm:inline">Mr.j blog</span>
           </a>
         </div>
       </header>
 
       {/* Main Area */}
-      <main className="flex-1 min-h-0 flex flex-col md:flex-row p-6 pb-3 gap-6 relative z-30 overflow-hidden">
+      <main className="flex-1 min-h-0 flex flex-col md:flex-row p-4 md:p-6 pb-3 gap-4 md:gap-6 relative z-30 overflow-y-auto md:overflow-hidden">
 
         {/* Left Column: Properties Table (55%) */}
-        <section className="flex-1 md:flex-[55] flex flex-col min-h-0 bg-slate-900/40 backdrop-blur-md rounded-2xl border border-blue-500/10 shadow-xl relative overflow-hidden">
+        <section className="flex-1 md:flex-[55] flex flex-col h-[520px] md:h-auto min-h-0 bg-slate-900/40 backdrop-blur-md rounded-2xl border border-blue-500/10 shadow-xl relative overflow-hidden">
 
           {/* Header of Table */}
           <div className="p-5 border-b border-blue-950/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -511,13 +522,13 @@ export default function App() {
             <div className="w-full border-collapse">
               {/* Table Header */}
               <div className="grid grid-cols-12 px-3 py-2.5 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-blue-950/40 bg-slate-950/40 rounded-lg mb-2">
-                <div className="col-span-1">ID</div>
-                <div className="col-span-3">Address</div>
-                <div className="col-span-2">Type</div>
-                <div className="col-span-2">Beds/Baths</div>
-                <div className="col-span-1.5">Price</div>
-                <div className="col-span-2">Pet Policy</div>
-                <div className="col-span-1.5">Region</div>
+                <div className="col-span-2 md:col-span-1">ID</div>
+                <div className="col-span-7 sm:col-span-4 md:col-span-3">Address</div>
+                <div className="hidden md:block md:col-span-2">Type</div>
+                <div className="hidden sm:block sm:col-span-3 md:col-span-2">Beds/Baths</div>
+                <div className="col-span-3 sm:col-span-3 md:col-span-2 lg:col-span-1">Price</div>
+                <div className="hidden lg:block lg:col-span-2">Pet Policy</div>
+                <div className="hidden xl:block xl:col-span-1">Region</div>
               </div>
 
               {/* Table Content */}
@@ -538,18 +549,18 @@ export default function App() {
                       key={p.product_id}
                       className="grid grid-cols-12 items-center px-3 py-3 bg-slate-900/60 border border-blue-950/20 rounded-xl hover:border-blue-500/20 hover:scale-[1.005] transition-all hover:shadow-lg hover:shadow-blue-950/10 cursor-pointer"
                     >
-                      <div className="col-span-1 text-xs font-semibold text-blue-400">{p.product_id}</div>
-                      <div className="col-span-3 text-sm font-medium text-white truncate pr-2" title={p.product_name}>
+                      <div className="col-span-2 md:col-span-1 text-xs font-semibold text-blue-400">{p.product_id}</div>
+                      <div className="col-span-7 sm:col-span-4 md:col-span-3 text-sm font-medium text-white truncate pr-2" title={p.product_name}>
                         {p.product_name}
                       </div>
-                      <div className="col-span-2 text-xs text-slate-300">{p.property_type}</div>
-                      <div className="col-span-2 text-xs text-slate-300">
+                      <div className="hidden md:block md:col-span-2 text-xs text-slate-300">{p.property_type}</div>
+                      <div className="hidden sm:block sm:col-span-3 md:col-span-2 text-xs text-slate-300">
                         {p.bedrooms} Bed / {p.bathrooms} Bath
                       </div>
-                      <div className="col-span-1.5 text-sm font-semibold text-white">
+                      <div className="col-span-3 sm:col-span-3 md:col-span-2 lg:col-span-1 text-sm font-semibold text-white">
                         ${p.price}/pw
                       </div>
-                      <div className="col-span-2">
+                      <div className="hidden lg:block lg:col-span-2">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${p.is_pet_friendly === 1
                           ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
                           : 'bg-slate-800 border border-slate-700 text-slate-400'
@@ -557,7 +568,7 @@ export default function App() {
                           {p.is_pet_friendly === 1 ? 'Pet Friendly' : 'No Pets'}
                         </span>
                       </div>
-                      <div className="col-span-1.5 text-xs text-slate-400 truncate">{p.region_name}</div>
+                      <div className="hidden xl:block xl:col-span-1 text-xs text-slate-400 truncate">{p.region_name}</div>
                     </div>
                   ))}
                 </div>
@@ -567,7 +578,7 @@ export default function App() {
         </section>
 
         {/* Right Column: AI Chatbot (45%) */}
-        <section className="flex-1 md:flex-[45] flex flex-col min-h-0 bg-slate-900/40 backdrop-blur-md rounded-2xl border border-blue-500/10 shadow-xl relative overflow-hidden">
+        <section className="flex-1 md:flex-[45] flex flex-col h-[520px] md:h-auto min-h-0 bg-slate-900/40 backdrop-blur-md rounded-2xl border border-blue-500/10 shadow-xl relative overflow-hidden">
 
           {/* Header of Chatbot */}
           <div className="p-5 border-b border-blue-950/40 flex items-center justify-between">
@@ -735,7 +746,7 @@ export default function App() {
       </main>
 
       {/* 3. Permanent Console Logs Section */}
-      <footer className="h-60 shrink-0 border-t border-blue-900/40 bg-slate-950/90 backdrop-blur-md z-40 relative flex flex-col shadow-[0_-8px_24px_rgba(0,0,0,0.4)]">
+      <footer className="hidden md:flex h-60 shrink-0 border-t border-blue-900/40 bg-slate-950/90 backdrop-blur-md z-40 relative flex flex-col shadow-[0_-8px_24px_rgba(0,0,0,0.4)]">
         {/* Console Header */}
         <div className="h-11 px-6 flex items-center justify-between border-b border-blue-950/20 bg-slate-950/40 select-none">
           <div className="flex items-center gap-2">
@@ -865,6 +876,62 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Mobile Console FAB Button */}
+      <button
+        onClick={() => setIsMobileConsoleOpen(true)}
+        className="md:hidden fixed bottom-20 left-0 z-40 w-12 h-12  bg-slate-900 border border-blue-500/30 text-blue-400 flex items-center justify-center shadow-lg shadow-blue-500/20 hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+        title="Open Console"
+      >
+        <Terminal className="w-5 h-5" />
+        <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 animate-pulse border-2 border-slate-950" />
+      </button>
+
+      {/* Mobile Console Modal */}
+      <div
+        className={`fixed inset-0 z-50 md:hidden flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 ${
+          isMobileConsoleOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setIsMobileConsoleOpen(false)}
+      >
+        <div
+          className={`bg-slate-900 border border-blue-900/40 rounded-t-2xl sm:rounded-2xl p-5 w-full max-w-lg shadow-2xl flex flex-col h-[65vh] transition-all duration-300 transform ${
+            isMobileConsoleOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-12 scale-95 opacity-0'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between pb-3 border-b border-blue-950/40">
+            <div className="flex items-center gap-2">
+              <Terminal className="w-4 h-4 text-blue-400" />
+              <span className="text-sm font-bold text-white">Developer Console Logs</span>
+            </div>
+            <button
+              onClick={() => setIsMobileConsoleOpen(false)}
+              className="text-slate-400 hover:text-white font-bold p-2 text-2xl leading-none"
+            >
+              &times;
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto mt-4 font-mono text-[11px] text-slate-300 space-y-2 p-3 rounded-xl bg-black/40 border border-blue-950/20 scrollbar-thin">
+            {logs.map((log, idx) => (
+              <div key={idx} className="flex items-start gap-2">
+                <span className="text-slate-500 shrink-0 select-none">[{log.timestamp}]</span>
+                <span className={`font-bold shrink-0 ${
+                  log.type === 'INFO' ? 'text-emerald-400' : log.type === 'WARN' ? 'text-amber-400' : 'text-red-400'
+                }`}>
+                  [{log.type}]
+                </span>
+                {log.step && (
+                  <span className="text-blue-400 shrink-0 font-semibold">[{log.step}]</span>
+                )}
+                <span className="text-slate-200 select-text leading-relaxed">{log.info}</span>
+              </div>
+            ))}
+            <div ref={mobileLogsEndRef} />
+          </div>
+        </div>
+      </div>
 
     </div>
   );
